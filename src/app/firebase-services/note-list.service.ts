@@ -1,29 +1,64 @@
 import { Injectable, inject } from "@angular/core";
-import { collectionData, Firestore, collection, doc } from "@angular/fire/firestore";
+import { Note } from "../interfaces/note.interface";
+import { collectionData, Firestore, collection, doc, onSnapshot } from "@angular/fire/firestore";
 
 @Injectable({
   providedIn: "root",
 })
 export class NoteListService {
-  // trashNotes: Note[]=[];
-  // normalNotes: Note[]=[];
+  trashNotes: Note[] = [];
+  normalNotes: Note[] = [];
 
-  items$;
-  firestrore: Firestore = inject(Firestore);
+  unsubNotes;
+  unsubTrash;
+
+  firestore: Firestore = inject(Firestore);
 
   constructor() {
-    this.items$ = collectionData(this.getNotesRef());
+    this.unsubNotes = this.subNotesList();
+    this.unsubTrash = this.subTrashList();
   }
 
-  firestore = inject(Firestore);
-  //itemCollection = collection(this.firestore, 'items');
+  ngonDestroy() {
+    this.unsubNotes();
+    this.unsubTrash();
+  }
 
-  getTrashRef() {
-    return collection(this.firestore, "notes");
+  subTrashList() {
+    return onSnapshot(this.getTrashRef(), (list) => {
+      this.trashNotes = [];
+      list.forEach((element) => {
+        this.trashNotes.push(this.setNoteObject(element.data(), element.id));
+      });
+    });
+  }
+
+  subNotesList() {
+    return onSnapshot(this.getNotesRef(), (list) => {
+      this.normalNotes = [];
+      list.forEach((element) => {
+        // console.log(this.setNoteObject(element.data(), element.id));
+        this.normalNotes.push(this.setNoteObject(element.data(), element.id));
+      });
+    });
+  }
+
+  setNoteObject(obj: any, id: string): Note {
+    return {
+      id: id || "",
+      type: obj.type || "note",
+      title: obj.title || "",
+      content: obj.content || "",
+      marked: obj.marked || false,
+    };
   }
 
   getNotesRef() {
     return collection(this.firestore, "notes");
+  }
+
+  getTrashRef() {
+    return collection(this.firestore, "trash");
   }
 
   getSingleDocRef(colId: string, docId: string) {
