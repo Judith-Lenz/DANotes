@@ -1,11 +1,19 @@
 import { Injectable, inject } from "@angular/core";
-import { Firestore, collection, doc } from "@angular/fire/firestore";
+import { collectionData, Firestore, collection, doc } from "@angular/fire/firestore";
 
 @Injectable({
   providedIn: "root",
 })
 export class NoteListService {
-  constructor() {}
+  // trashNotes: Note[]=[];
+  // normalNotes: Note[]=[];
+
+  items$;
+  firestrore: Firestore = inject(Firestore);
+
+  constructor() {
+    this.items$ = collectionData(this.getNotesRef());
+  }
 
   firestore = inject(Firestore);
   //itemCollection = collection(this.firestore, 'items');
