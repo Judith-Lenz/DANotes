@@ -1,9 +1,12 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from "@angular/core";
+import { Firestore, collection } from "@angular/fire/firestore";
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: "root",
 })
 export class NoteListService {
+  constructor() {}
 
-  constructor() { }
+  firestore = inject(Firestore);
+  //itemCollection = collection(this.firestore, 'items');
 }
