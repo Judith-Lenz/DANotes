@@ -1,0 +1,14 @@
+{
+  "targets": {
+    "danotes-f34bc": {
+      "hosting": {
+        "danotes": [
+          "danotes-f34bc"
+        ]
+      }
+    }
+  },
+  "projects": {
+    "default": "danotes-f34bc"
+  }
+}
