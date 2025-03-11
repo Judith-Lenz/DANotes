@@ -14,6 +14,7 @@ import { NoteComponent } from "./note/note.component";
 })
 export class NoteListComponent {
   noteList: Note[] = [];
+  trashListe: Note[] = [];
   favFilter: "all" | "fav" = "all";
   status: "notes" | "trash" = "notes";
 
@@ -24,6 +25,10 @@ export class NoteListComponent {
 
   getList(): Note[] {
     return this.noteService.normalNotes;
+  }
+
+  getTrash(): Note[] {
+    return this.noteService.trashNotes;
   }
 
   changeFavFilter(filter: "all" | "fav") {
